@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'CSC Guru',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
+        primarySwatch: Colors.red,
       ),
       home: const HomePage(),
     );
