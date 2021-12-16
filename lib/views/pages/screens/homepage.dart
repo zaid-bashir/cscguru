@@ -1,10 +1,14 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, sized_box_for_whitespace
+// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, sized_box_for_whitespace, prefer_const_declarations
 
+import 'package:cscguru/views/pages/screens/notes/notes_home.dart';
+import 'package:cscguru/views/pages/screens/syllbus/semester_home.dart';
+import 'package:cscguru/views/pages/screens/videos/videos_home.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getwidget/getwidget.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({Key key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -23,169 +27,205 @@ class _HomePageState extends State<HomePage> {
     "assets/php.png",
   ];
 
+  DateTime timeBackPressed = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: GFAppBar(
-        title: Text("CSC Guru"),
-      ),
-      body: SafeArea(
-        child: ListView(
-          children: [
-            GFListTile(
-              avatar: GFAvatar(
-                size: 50,
-                backgroundImage: AssetImage("assets/developer.jpg"),
+    return WillPopScope(
+      onWillPop: () async {
+        final difference = DateTime.now().difference(timeBackPressed);
+        final isExitWarning = difference >= Duration(seconds: 2);
+        timeBackPressed = DateTime.now();
+        if (isExitWarning) {
+          final message = "Press back again to Exit";
+          Fluttertoast.showToast(msg: message, fontSize: 18);
+          return false;
+        } else {
+          Fluttertoast.cancel();
+          return true;
+        }
+      },
+      child: Scaffold(
+        appBar: GFAppBar(
+          title: Text("CSC Guru"),
+        ),
+        body: SafeArea(
+          child: ListView(
+            children: [
+              GFListTile(
+                avatar: GFAvatar(
+                  size: 50,
+                  backgroundImage: AssetImage("assets/developer.jpg"),
+                ),
+                titleText: 'Welcome To CSC Guru',
+                subTitleText: 'Lets Explore the World of Computer Science',
               ),
-              titleText: 'Welcome To CSC Guru',
-              subTitleText: 'Lets Explore the World of Computer Science',
-            ),
-            GFCarousel(
-              autoPlay: true,
-              activeIndicator: Colors.green,
-              autoPlayAnimationDuration: Duration(seconds: 1),
-              items: imageList.map(
-                (url) {
-                  return Card(
-                    borderOnForeground: true,
-                    elevation: 20,
-                    shadowColor: Colors.red,
-                    child: Container(
-                      margin: EdgeInsets.all(8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                        child:
-                            Image.asset(url, fit: BoxFit.cover, width: 1000.0),
+              GFCarousel(
+                autoPlay: true,
+                activeIndicator: Colors.green,
+                autoPlayAnimationDuration: Duration(seconds: 1),
+                items: imageList.map(
+                  (url) {
+                    return Card(
+                      borderOnForeground: true,
+                      elevation: 20,
+                      shadowColor: Colors.red,
+                      child: Container(
+                        margin: EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                          child: Image.asset(url,
+                              fit: BoxFit.cover, width: 1000.0),
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  },
+                ).toList(),
+                onPageChanged: (index) {
+                  debugPrint(index.toString());
+                  setState(() {
+                    index;
+                  });
                 },
-              ).toList(),
-              onPageChanged: (index) {
-                debugPrint(index.toString());
-                setState(() {
-                  index;
-                });
-              },
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Explore...",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: 60,
-                  child: GFButton(
-                    onPressed: () {},
-                    color: Colors.orange,
-                    text: "Syllbus",
-                    textStyle: TextStyle(
-                      fontSize: 25,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Explore...",
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
-                    type: GFButtonType.solid,
-                    blockButton: true,
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: 60,
-                  child: GFButton(
-                    onPressed: () {},
-                    color: Colors.blue,
-                    text: "Videos",
-                    textStyle: TextStyle(
-                      fontSize: 25,
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 60,
+                    child: GFButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => SemesterHome(),
+                          ),
+                        );
+                      },
+                      color: Colors.orange,
+                      text: "Syllabus",
+                      textStyle: TextStyle(
+                        fontSize: 25,
+                      ),
+                      type: GFButtonType.solid,
+                      blockButton: true,
                     ),
-                    type: GFButtonType.solid,
-                    blockButton: true,
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: 60,
-                  child: GFButton(
-                    onPressed: () {},
-                    color: Colors.green,
-                    text: "Notes",
-                    textStyle: TextStyle(
-                      fontSize: 25,
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 60,
+                    child: GFButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => VideosHome(),
+                          ),
+                        );
+                      },
+                      color: Colors.blue,
+                      text: "Videos",
+                      textStyle: TextStyle(
+                        fontSize: 25,
+                      ),
+                      type: GFButtonType.solid,
+                      blockButton: true,
                     ),
-                    type: GFButtonType.solid,
-                    blockButton: true,
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: 60,
-                  child: GFButton(
-                    onPressed: () {},
-                    color: Colors.teal,
-                    text: "Quizes",
-                    textStyle: TextStyle(
-                      fontSize: 25,
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 60,
+                    child: GFButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => NotesHome(),
+                          ),
+                        );
+                      },
+                      color: Colors.green,
+                      text: "Notes",
+                      textStyle: TextStyle(
+                        fontSize: 25,
+                      ),
+                      type: GFButtonType.solid,
+                      blockButton: true,
                     ),
-                    type: GFButtonType.solid,
-                    blockButton: true,
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: 60,
-                  child: GFButton(
-                    onPressed: () {},
-                    color: Colors.pink,
-                    text: "Coding",
-                    textStyle: TextStyle(
-                      fontSize: 25,
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 60,
+                    child: GFButton(
+                      onPressed: () {},
+                      color: Colors.teal,
+                      text: "Quizes",
+                      textStyle: TextStyle(
+                        fontSize: 25,
+                      ),
+                      type: GFButtonType.solid,
+                      blockButton: true,
                     ),
-                    type: GFButtonType.solid,
-                    blockButton: true,
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: 60,
-                  child: GFButton(
-                    color: Colors.brown,
-                    onPressed: () {},
-                    text: "MCQ's",
-                    textStyle: TextStyle(
-                      fontSize: 25,
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 60,
+                    child: GFButton(
+                      onPressed: () {},
+                      color: Colors.pink,
+                      text: "Coding",
+                      textStyle: TextStyle(
+                        fontSize: 25,
+                      ),
+                      type: GFButtonType.solid,
+                      blockButton: true,
                     ),
-                    type: GFButtonType.solid,
-                    blockButton: true,
                   ),
-                ),
-              ],
-            ),
-          ],
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 60,
+                    child: GFButton(
+                      color: Colors.brown,
+                      onPressed: () {},
+                      text: "MCQ's",
+                      textStyle: TextStyle(
+                        fontSize: 25,
+                      ),
+                      type: GFButtonType.solid,
+                      blockButton: true,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
